@@ -1,0 +1,30 @@
+apiVersion: concord.dev/v1
+kind: ControlPack
+metadata:
+  id: soc2
+  name: soc2
+  version: v0.1.0
+  framework_label: SOC 2
+spec:
+  controls:
+    - SOC2-CC1.4
+    - SOC2-CC2.1
+    - SOC2-CC3.1
+    - SOC2-CC4.1
+    - SOC2-CC5.1
+    - SOC2-CC6.1
+    - SOC2-CC6.2
+    - SOC2-CC6.3
+    - SOC2-CC7.1-containers
+    - SOC2-CC7.1-snyk
+    - SOC2-CC7.1
+    - SOC2-CC7.2
+    - SOC2-CC8.1
+    - SOC2-CC9.2
+  evidence_sources:
+    - source: github
+      version: ">=v0.1.0,<v1.0.0"
+    - source: okta
+      version: ">=v0.1.0,<v1.0.0"
+    - source: snyk
+      version: ">=v0.1.0,<v1.0.0"
