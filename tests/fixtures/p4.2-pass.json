@@ -1,0 +1,12 @@
+{
+  "aws_storage": {
+    "fetched_at": "2026-01-15T10:00:00Z",
+    "buckets": [
+      {"name": "pii-archive",
+       "tags": {"pii": "true"},
+       "lifecycle": {"enabled": true,
+                     "rules": [{"id": "expire-after-90d", "expiration_days": 90}]},
+       "object_lock": {"enabled": true, "default_retention_days": 30}}
+    ]
+  }
+}

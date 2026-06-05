@@ -1,0 +1,15 @@
+{
+  "aws_encryption": {
+    "fetched_at": "2026-01-15T10:00:00Z",
+    "buckets": [
+      {"name": "customer-data", "confidential": true,
+       "encryption": {"configured": true, "type": "AES256", "customer_managed": false}}
+    ],
+    "rds_instances": [
+      {"identifier": "prod-postgres", "confidential": true,
+       "encryption": {"configured": true, "type": "aws:kms",
+                       "kms_key_id": "alias/aws/rds", "customer_managed": false}}
+    ],
+    "dynamodb_tables": []
+  }
+}

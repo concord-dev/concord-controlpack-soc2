@@ -1,0 +1,58 @@
+apiVersion: concord.dev/v1
+kind: Control
+
+metadata:
+  id: SOC2-P4.2
+  name: privacy-data-destruction
+  title: Personal-data stores have lifecycle policies and write-protection
+  framework: soc2
+  category: Privacy
+  severity: high
+  tags:
+    - aws
+    - privacy
+    - data-destruction
+  owners:
+    - team: platform
+
+spec:
+  description: |
+    SOC 2 P4.2 requires the entity to dispose of personal information when
+    no longer needed. The operational form is: every bucket tagged
+    `pii=true` has an S3 lifecycle rule that expires objects (so deletion
+    is policy-driven, not manual), and object lock is configured to prevent
+    pre-retention destruction.
+
+  rationale: |
+    Manual deletion misses things; lifecycle rules force a documented
+    retention window. Object lock prevents the deletion-window itself
+    from being abused. Together they map cleanly to "personal data is
+    disposed of on a schedule, not ad-hoc."
+
+  evidence:
+    - id: aws_storage
+      source: aws
+      type: s3_lifecycle
+      fixture: ../tests/fixtures/p4.2-pass.json
+      params:
+        region: ${env.AWS_REGION}
+
+  policy:
+    engine: rego
+    package: concord.soc2.p4_2
+    file: ../policies/p4_2.rego
+
+  remediation:
+    runbook: docs/remediation/soc2-p4.2.md
+    auto_fix: false
+    estimated_effort: 4h
+
+  mappings:
+    gdpr:
+      - "Art.5(1)(e)"
+      - "Art.17"
+    iso27001:
+      - "A.8.10"
+
+  status: stable
+  blocking: true

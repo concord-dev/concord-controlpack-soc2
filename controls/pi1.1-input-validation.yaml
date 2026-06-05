@@ -1,0 +1,56 @@
+apiVersion: concord.dev/v1
+kind: Control
+
+metadata:
+  id: SOC2-PI1.1
+  name: processing-integrity-input-validation
+  title: Public-facing APIs enforce schema validation and rate limiting
+  framework: soc2
+  category: Processing Integrity
+  severity: medium
+  tags:
+    - api
+    - validation
+    - processing-integrity
+  owners:
+    - team: platform
+
+spec:
+  description: |
+    SOC 2 PI1.1 requires the entity to obtain and document policies around
+    inputs to processing. The machine-checkable form is: every public-facing
+    API Gateway / ALB-fronted endpoint has request validation enabled and
+    a usage plan / WAF rule capping requests.
+
+  rationale: |
+    Unvalidated input is the root cause of most processing-integrity
+    findings auditors flag (silent type coercion, off-by-one truncation,
+    JSON-injection). Schema validation + rate limiting are the cheapest
+    durable controls to point at during a PI1 walkthrough.
+
+  evidence:
+    - id: aws_api_endpoints
+      source: aws
+      type: api_gateway
+      fixture: ../tests/fixtures/pi1.1-pass.json
+      params:
+        region: ${env.AWS_REGION}
+
+  policy:
+    engine: rego
+    package: concord.soc2.pi1_1
+    file: ../policies/pi1_1.rego
+
+  remediation:
+    runbook: docs/remediation/soc2-pi1.1.md
+    auto_fix: false
+    estimated_effort: 1d
+
+  mappings:
+    iso27001:
+      - "A.8.26"
+    nist_csf:
+      - "PR.DS-6"
+
+  status: stable
+  blocking: false

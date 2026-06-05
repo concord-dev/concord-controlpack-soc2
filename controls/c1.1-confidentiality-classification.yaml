@@ -1,0 +1,57 @@
+apiVersion: concord.dev/v1
+kind: Control
+
+metadata:
+  id: SOC2-C1.1
+  name: confidentiality-classification
+  title: Confidential data stores have encryption-at-rest with customer-managed keys
+  framework: soc2
+  category: Confidentiality
+  severity: high
+  tags:
+    - aws
+    - confidentiality
+    - encryption
+  owners:
+    - team: platform
+
+spec:
+  description: |
+    SOC 2 C1.1 requires the entity to identify and maintain confidential
+    information consistently with confidentiality commitments. The
+    machine-checkable form: confidential S3 buckets / RDS / DynamoDB
+    use customer-managed KMS keys (not AWS-managed defaults), so key
+    rotation and revocation are within the org's control.
+
+  rationale: |
+    AWS-managed keys (aws/s3, aws/rds) are operationally convenient but
+    rotate on AWS's schedule and cannot be revoked by the customer in a
+    breach. Customer-managed keys (CMKs) make C1.1 demonstrable.
+
+  evidence:
+    - id: aws_encryption
+      source: aws
+      type: storage_encryption
+      fixture: ../tests/fixtures/c1.1-pass.json
+      params:
+        region: ${env.AWS_REGION}
+
+  policy:
+    engine: rego
+    package: concord.soc2.c1_1
+    file: ../policies/c1_1.rego
+
+  remediation:
+    runbook: docs/remediation/soc2-c1.1.md
+    auto_fix: false
+    estimated_effort: 8h
+
+  mappings:
+    iso27001:
+      - "A.8.24"
+      - "A.5.34"
+    nist_csf:
+      - "PR.DS-1"
+
+  status: stable
+  blocking: true

@@ -1,0 +1,11 @@
+{
+  "aws_api_endpoints": {
+    "fetched_at": "2026-01-15T10:00:00Z",
+    "apis": [
+      {"name": "public-api", "public": true,
+       "request_validation_enabled": false,
+       "waf_attached": false, "waf_rule_count": 0,
+       "usage_plan_attached": false}
+    ]
+  }
+}

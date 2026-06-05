@@ -1,0 +1,7 @@
+{
+  "aws_cloudwatch": {
+    "fetched_at": "2026-01-15T10:00:00Z",
+    "alarms": [],
+    "autoscaling_groups": []
+  }
+}

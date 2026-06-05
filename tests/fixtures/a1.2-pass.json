@@ -1,0 +1,13 @@
+{
+  "aws_cloudwatch": {
+    "fetched_at": "2026-01-15T10:00:00Z",
+    "alarms": [
+      {"name": "api-high-cpu", "namespace": "AWS/EC2", "metric": "CPUUtilization", "state": "OK"},
+      {"name": "api-high-latency", "namespace": "AWS/ApplicationELB", "metric": "TargetResponseTime", "state": "OK"},
+      {"name": "db-low-storage", "namespace": "AWS/RDS", "metric": "FreeStorageSpace", "state": "OK"}
+    ],
+    "autoscaling_groups": [
+      {"name": "api-workers", "min_size": 2, "max_size": 20, "desired_capacity": 4}
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+apiVersion: concord.dev/v1
+kind: Control
+
+metadata:
+  id: SOC2-A1.2
+  name: availability-monitoring
+  title: Production AWS workloads have CloudWatch alarms and auto-scaling configured
+  framework: soc2
+  category: Availability
+  severity: high
+  tags:
+    - aws
+    - availability
+    - monitoring
+  owners:
+    - team: platform
+
+spec:
+  description: |
+    SOC 2 Availability A1.2 requires the entity to monitor system performance
+    and capacity, and to authorize and use system components based on
+    capacity demand. The operational form auditors look for is: critical
+    services have CloudWatch alarms on saturation metrics, and auto-scaling
+    groups exist for stateless tiers.
+
+  rationale: |
+    Without alarms, capacity exhaustion shows up as customer impact. Without
+    auto-scaling, recovery from a spike requires manual intervention — which
+    is incompatible with the availability commitments most SOC 2 reports
+    list in section IV.
+
+  evidence:
+    - id: aws_cloudwatch
+      source: aws
+      type: cloudwatch_alarms
+      fixture: ../tests/fixtures/a1.2-pass.json
+      params:
+        region: ${env.AWS_REGION}
+
+  policy:
+    engine: rego
+    package: concord.soc2.a1_2
+    file: ../policies/a1_2.rego
+
+  remediation:
+    runbook: docs/remediation/soc2-a1.2.md
+    auto_fix: false
+    estimated_effort: 4h
+
+  mappings:
+    iso27001:
+      - "A.8.6"
+      - "A.8.16"
+    nist_csf:
+      - "DE.CM-1"
+      - "DE.AE-3"
+
+  status: stable
+  blocking: true
