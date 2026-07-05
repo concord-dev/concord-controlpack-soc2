@@ -19,6 +19,33 @@ deny contains msg if {
     msg := sprintf("active user %q has no strong MFA factor enrolled (TOTP, push, WebAuthn, or hardware token required)", [user.email])
 }
 
+# Per-resource verdicts: one finding per ACTIVE user (the resource is the user),
+# so CC6.1 answers "which users fail MFA?" rather than a single aggregate
+# pass/fail. Concord's engine fans these into one finding per user; an engine
+# without per-resource support falls back to the deny/warn rules. The fail/pass
+# bodies are mutually exclusive, so each active user yields exactly one verdict.
+resource_findings contains verdict if {
+    some user in input.okta_users.users
+    user.status == "ACTIVE"
+    not user.has_strong_mfa
+    verdict := {
+        "resource": user.email,
+        "status": "fail",
+        "messages": ["no strong MFA factor enrolled (TOTP, push, WebAuthn, or hardware token required)"],
+    }
+}
+
+resource_findings contains verdict if {
+    some user in input.okta_users.users
+    user.status == "ACTIVE"
+    user.has_strong_mfa
+    verdict := {
+        "resource": user.email,
+        "status": "pass",
+        "messages": [],
+    }
+}
+
 # Warn when an active user has ONE strong factor — two recommended for
 # redundancy so users don't get locked out after device loss.
 warn contains msg if {
