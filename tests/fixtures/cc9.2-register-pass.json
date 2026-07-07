@@ -1,6 +1,6 @@
 {
   "scanned_paths": ["docs/risk-register"],
-  "fetched_at": "2026-05-14T10:00:00Z",
+  "fetched_at": "2026-07-05T10:00:00Z",
   "docs": [
     {
       "path": "docs/risk-register/sso-outage.md",
@@ -9,7 +9,7 @@
       "owner": "it-security",
       "mitigation_status": "mitigated",
       "mitigation": "Configured break-glass IAM users with offline credentials in 1Password vault accessible to leadership.",
-      "reviewed_at": "2026-04-01T00:00:00Z"
+      "reviewed_at": "2026-06-20T00:00:00Z"
     },
     {
       "path": "docs/risk-register/aws-key-leak.md",
@@ -18,7 +18,7 @@
       "owner": "platform",
       "mitigation_status": "mitigated",
       "mitigation": "Replaced long-lived keys with SSO + STS short-lived credentials; monitor for any remaining static keys via CIS-AWS-1.4.",
-      "reviewed_at": "2026-04-22T00:00:00Z"
+      "reviewed_at": "2026-06-25T00:00:00Z"
     }
   ]
 }
