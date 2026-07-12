@@ -33,6 +33,16 @@ warn contains msg if {
     msg := sprintf("PII bucket %q has no object-lock — destruction window can be bypassed", [b.name])
 }
 
+# doc 31 §4 — no fail-open tag gates: a resource with no 'pii' tag is neither confirmed in-scope
+# nor out-of-scope, so every deny above skips it and it would pass silently.
+# Warn on the unclassified resource instead of ignoring it.
+
+warn contains msg if {
+    some resource in input.aws_storage.buckets
+    not classified(resource)
+    msg := sprintf("S3 bucket %q has no pii tag, so this control's checks did not apply to it — tag pii=true to bring it into PII scope or pii=false to confirm it is out of scope", [resource.name])
+}
+
 is_pii(b) if {
     b.tags.pii == "true"
 }
@@ -41,3 +51,7 @@ has_expiration_rule(b) if {
     some rule in b.lifecycle.rules
     rule.expiration_days > 0
 }
+
+classified(resource) if resource.tags.pii == "true"
+
+classified(resource) if resource.tags.pii == "false"
